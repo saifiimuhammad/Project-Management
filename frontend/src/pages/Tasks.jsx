@@ -9,33 +9,29 @@ import { useGetTasksQuery } from "../redux/slices/api/taskApiSlice";
 // import UpdateTask from "../components/task/UpdateTask";
 
 const Tasks = () => {
- 
-
-  
-  const {data, isLoading} = useGetTasksQuery({
-    strQuery: "" , search: ""
+  const { data, isLoading } = useGetTasksQuery({
+    strQuery: "",
+    search: "",
   });
+  console.log(data);
 
-   return isLoading? (
-      <div className='py-10'>
+  return isLoading ? (
+    <div className="py-10">
       <Spinner />
     </div>
-   
-):(
-    <div className='w-full'>
-      <div className='flex items-center justify-between mb-4'>
-        <Title title= "All Projects" />
-
+  ) : (
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-4">
+        <Title title="All Projects" />
       </div>
 
-      <div className='w-full'>
+      <div className="w-full">
         <Table tasks={data?.tasks} />
       </div>
 
-
       {/* <UpdateTask open={open} setOpen={setOpen} /> */}
     </div>
-  )
-}
+  );
+};
 
 export default Tasks;

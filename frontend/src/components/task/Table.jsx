@@ -25,7 +25,7 @@ const Table = ({ tasks }) => {
   const task = data?.task;
 
   // const loggedInUser = useSelector((state) => state.auth.user);
- 
+
   const navigate = useNavigate();
 
   const { data: allUsers } = useGetAllUsersQuery();
@@ -45,12 +45,12 @@ const Table = ({ tasks }) => {
     setSelected(el);
     setOpenEdit(true);
     setOpen(false);
-  }
+  };
 
   const deleteHandler = async () => {
     try {
       const result = await deleteTask({
-        id: selected
+        id: selected,
       }).unwrap();
       toast.success(result?.message);
 
@@ -61,91 +61,79 @@ const Table = ({ tasks }) => {
     } catch (error) {
       console.log(err);
       toast.error(err?.data?.message || err.error);
-
     }
-
   };
 
-
-
-
   const TableHeader = () => (
-    <thead className='w-full border-b border-gray-300'>
-      <tr className='w-full text-black  text-left'>
-        <th className='py-2'>Title</th>
-        <th className='py-2'>Description</th>
-        <th className='py-2 line-clamp-1'>Created At</th>
-        <th className='py-2'>Team</th>
+    <thead className="w-full border-b border-gray-300">
+      <tr className="w-full text-black  text-left">
+        <th className="py-2">Title</th>
+        <th className="py-2">Description</th>
+        <th className="py-2 line-clamp-1">Created At</th>
+        <th className="py-2">Team</th>
       </tr>
     </thead>
   );
 
   const TableRow = ({ task }) => (
-    <tr className='border-b border-gray-200 text-gray-600 hover:bg-gray-300/10'>
-      <td className='py-2'>
-        <div className='flex items-center gap-2'>
-          <p className='w-full line-clamp-2 text-base text-black'>
+    <tr className="border-b border-gray-200 text-gray-600 hover:bg-gray-300/10">
+      <td className="py-2">
+        <div className="flex items-center gap-2">
+          <p className="w-full line-clamp-2 text-base text-black">
             {task?.title}
           </p>
         </div>
       </td>
 
-      <td className='py-2'>
+      <td className="py-2">
         <div className={"flex gap-1 items-center"}>
-          <span className='capitalize line-clamp-1'>
-            {task?.description}
-          </span>
+          <span className="capitalize line-clamp-1">{task?.description}</span>
         </div>
       </td>
 
-      <td className='py-2'>
-        <span className='text-sm text-gray-600'>
+      <td className="py-2">
+        <span className="text-sm text-gray-600">
           {formatDate(new Date(task?.date))}
         </span>
       </td>
 
-
+      {/* <td className="py-2">
+        <div className="flex space-x-2">
+          {task?.team &&
+            task.team
+              .filter((teamId) => teamId != null) // filter out null/undefined IDs
+              .map((teamId) => {
+                const userObj = allUsers?.find(
+                  (user) => user?._id?.toString() === teamId.toString()
+                );
+                if (!userObj) return null;
+                return (
+                  <div key={teamId.toString()}>
+                    <UserInfo user={userObj} />
+                  </div>
+                );
+              })}
+        </div>
+      </td> */}
 
       {/* <td className="py-2">
-  <div className="flex space-x-2">
-    {task?.team &&
-      task.team
-        .filter(teamId => teamId != null) // filter out null/undefined IDs
-        .map((teamId) => {
-          const userObj = allUsers?.find(
-            (user) => user?._id?.toString() === teamId.toString()
-          );
-          if (!userObj) return null;
-          return (
-            <div key={teamId.toString()}>
-              <UserInfo user={userObj} />
-            </div>
-          );
-        })}
-  </div>
-</td> */}
-
-      {/* <td className="py-2">
-  <div className="flex space-x-2">
-    {task?.team &&
-      task.team
-        .filter((teamId) => teamId != null)
-        .map((teamId) => {
-          const userObj = allUsers?.find(
-            (user) => user?._id?.toString() === teamId.toString()
-          );
-          if (!userObj) return null;
-          return (
-            <div key={teamId.toString()}>
-              <UserInfo user={userObj} />
-            </div>
-          );
-        })}
-  </div>
-</td> */}
-
-
-
+        <div className="flex space-x-2">
+          {task?.team &&
+            task.team
+              .filter((teamId) => teamId != null)
+              .map((teamId) => {
+                const userObj = allUsers?.find(
+                  (user) => user?._id?.toString() === teamId.toString()
+                );
+                if (!userObj) return null;
+                return (
+                  <div key={teamId.toString()}>
+                    <UserInfo user={userObj} />
+                  </div>
+                );
+              })}
+        </div>
+      </td> */}
 
       {/* <td className="py-2">
   <div className="flex space-x-2">
@@ -172,65 +160,63 @@ const Table = ({ tasks }) => {
   </div>
 </td> */}
 
-
-      <td className='py-2'>
-        <div className='flex'>
+      <td className="py-2">
+        <div className="flex">
           {task?.team?.map((user, key) => {
-            console.log("userinfo received:", user);
-            
-             return(
-            <div key={key} >
-              <Popover className="relative">
-                <Popover.Button className="inline-flex items-center focus:outline-none">
-                  <FaUser className="w-6 h-6 text-purple-600" />
-                </Popover.Button>
-                <Transition
-                  as={Fragment}
-                  enter="transition duration-200 ease-out"
-                  enterFrom="opacity-0 translate-y-1"
-                  enterTo="opacity-100 translate-y-0"
-                  leave="transition duration-150 ease-in"
-                  leaveFrom="opacity-100 translate-y-0"
-                  leaveTo="opacity-0 translate-y-1"
-                >
-                  <Popover.Panel className="absolute z-10 mt-2 w-48 p-4 bg-white rounded shadow-lg">
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{user?.name || "No Name"}</p>
-                      <p className="text-sm text-gray-600">{user?.email || "No Email"}</p>
-                      
-                    </div>
-                  </Popover.Panel>
-                </Transition>
-              </Popover>
-             
-              
-              {/* <UserInfo user={user} /> */}
-            </div>
-             );
-         } )}
-          
+            return (
+              <div key={key}>
+                <Popover className="relative">
+                  <Popover.Button className="inline-flex items-center focus:outline-none">
+                    <FaUser className="w-6 h-6 text-purple-600" />
+                  </Popover.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition duration-200 ease-out"
+                    enterFrom="opacity-0 translate-y-1"
+                    enterTo="opacity-100 translate-y-0"
+                    leave="transition duration-150 ease-in"
+                    leaveFrom="opacity-100 translate-y-0"
+                    leaveTo="opacity-0 translate-y-1"
+                  >
+                    <Popover.Panel className="absolute z-10 mt-2 w-48 p-4 bg-white rounded shadow-lg">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {user?.name || "No Name"}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {user?.email || "No Email"}
+                        </p>
+                      </div>
+                    </Popover.Panel>
+                  </Transition>
+                </Popover>
+
+                {/* <UserInfo user={user} /> */}
+              </div>
+            );
+          })}
         </div>
       </td>
 
-      <td className='py-2 flex gap-2 md:gap-4 justify-end'>
+      <td className="py-2 flex gap-2 md:gap-4 justify-end">
         <Button
-          className='text-green-600 hover:text-green-500 sm:px-0 text-sm md:text-base'
-          label='View'
-          type='button'
+          className="text-green-600 hover:text-green-500 sm:px-0 text-sm md:text-base"
+          label="View"
+          type="button"
           onClick={() => navigate(`/task/${task._id}`)}
         />
 
         <Button
-          className='text-blue-600 hover:text-blue-500 sm:px-0 text-sm md:text-base'
-          label='Edit'
-          type='button'
+          className="text-blue-600 hover:text-blue-500 sm:px-0 text-sm md:text-base"
+          label="Edit"
+          type="button"
           onClick={() => editTaskHandler(task)}
         />
 
         <Button
-          className='text-red-700 hover:text-red-500 sm:px-0 text-sm md:text-base'
-          label='Delete'
-          type='button'
+          className="text-red-700 hover:text-red-500 sm:px-0 text-sm md:text-base"
+          label="Delete"
+          type="button"
           onClick={() => deleteClicks(task._id)}
         />
       </td>
@@ -238,18 +224,16 @@ const Table = ({ tasks }) => {
   );
   return (
     <>
-    
-  
       <div className="flex justify-end mb-4">
         <Button
-          label='Add Project'
-          className='flex flex-row-reverse gap-1 items-center bg-purple-600 text-white rounded-md text-lg px-6 py-2 2xl:py-2.5'
+          label="Add Project"
+          className="flex flex-row-reverse gap-1 items-center bg-purple-600 text-white rounded-md text-lg px-6 py-2 2xl:py-2.5"
           onClick={() => addTaskHandler(task)}
         />
       </div>
-      <div className='bg-white  px-2 md:px-4 pt-4 pb-9 shadow-md rounded'>
-        <div className='overflow-x-auto'>
-          <table className='w-full '>
+      <div className="bg-white  px-2 md:px-4 pt-4 pb-9 shadow-md rounded">
+        <div className="overflow-x-auto">
+          <table className="w-full ">
             <TableHeader />
             <tbody>
               {tasks?.map((task, index) => (
@@ -259,7 +243,6 @@ const Table = ({ tasks }) => {
           </table>
         </div>
       </div>
-
 
       {/* TODO */}
       <ConfirmatioDialog
@@ -280,7 +263,12 @@ const Table = ({ tasks }) => {
 {openEdit && <UpdateTask open={openEdit} setOpen={setOpenEdit} taskData={selected} />} */}
 
       {selected ? (
-        <UpdateTask open={openEdit} setOpen={setOpenEdit} taskData={selected} refetch={refetch} />
+        <UpdateTask
+          open={openEdit}
+          setOpen={setOpenEdit}
+          taskData={selected}
+          refetch={refetch}
+        />
       ) : (
         <AddTask open={open} setOpen={setOpen} />
       )}

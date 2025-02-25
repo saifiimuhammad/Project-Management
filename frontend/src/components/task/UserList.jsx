@@ -5,16 +5,15 @@ import clsx from "clsx";
 import { MdCheck } from "react-icons/md";
 import { useGetAllUsersQuery } from "../../redux/slices/api/userApiSlice";
 
-
 const UserList = ({ setTeam, team, taskData }) => {
-  const {data} = useGetAllUsersQuery();
+  const { data } = useGetAllUsersQuery();
   const [selectedUsers, setSelectedUsers] = useState([]);
 
- 
-  
   const handleChange = (el) => {
     setSelectedUsers(el);
+    console.log(el);
     setTeam(el?.map((u) => u._id));
+    // setTeam(el);
   };
   // useEffect(() => {
   //   if (team?.length < 1) {
@@ -26,7 +25,7 @@ const UserList = ({ setTeam, team, taskData }) => {
 
   useEffect(() => {
     if (team && team.length > 0) {
-      setSelectedUsers(data?.filter(user => team.includes(user._id)) || []);
+      setSelectedUsers(data?.filter((user) => team.includes(user._id)) || []);
     } else if (data && data.length > 0) {
       setSelectedUsers([data[0]]);
     }
@@ -34,33 +33,33 @@ const UserList = ({ setTeam, team, taskData }) => {
 
   return (
     <div>
-      <p className='text-gray-700'>Assign Task </p>
+      <p className="text-gray-700">Assign Task </p>
       <Listbox
         value={selectedUsers}
         onChange={(el) => handleChange(el)}
         multiple
       >
-        <div className='relative mt-1'>
-          <Listbox.Button className='relative w-full cursor-default rounded bg-white pl-3 pr-10 text-left px-3 py-2.5 2xl:py-3 border border-gray-300 sm:text-sm'>
-            <span className='block truncate'>
+        <div className="relative mt-1">
+          <Listbox.Button className="relative w-full cursor-default rounded bg-white pl-3 pr-10 text-left px-3 py-2.5 2xl:py-3 border border-gray-300 sm:text-sm">
+            <span className="block truncate">
               {selectedUsers?.map((user) => user?.name).join(", ")}
             </span>
 
-            <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <BsChevronExpand
-                className='h-5 w-5 text-gray-400'
-                aria-hidden='true'
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
               />
             </span>
           </Listbox.Button>
 
           <Transition
             as={Fragment}
-            leave='transition ease-in duration-100'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
           >
-            <Listbox.Options className='z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm'>
+            <Listbox.Options className="z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
               {data?.map((user, index) => (
                 <Listbox.Option
                   key={index}
@@ -79,14 +78,12 @@ const UserList = ({ setTeam, team, taskData }) => {
                           selected ? "font-medium" : "font-normal"
                         )}
                       >
-                        <div className='w-6 h-6 rounded-full text-white flex items-center justify-center '>
-    
-                        </div>
+                        <div className="w-6 h-6 rounded-full text-white flex items-center justify-center "></div>
                         <span>{user.name}</span>
                       </div>
                       {selected ? (
-                        <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-purple-600'>
-                          <MdCheck className='h-5 w-5' aria-hidden='true' />
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-purple-600">
+                          <MdCheck className="h-5 w-5" aria-hidden="true" />
                         </span>
                       ) : null}
                     </>
